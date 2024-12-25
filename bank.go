@@ -1,13 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
+
+
+const accountBalanceFile = "balance.txt"
+
+func getBalanceFormFile() float64{
+	data, _ := os.ReadFile(accountBalanceFile)
+	balanceText := string(data)
+	balance, _ := strconv.ParseFloat(balanceText, 64)
+	return balance
+
+}
+
+
+
+func writeBalanceToFile(balance float64){
+	balanceText := fmt.Sprint(balance)
+	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
+}
 
 func main() {
 
-	var accountBalance float64 = 1000
+	var accountBalance float64 = getBalanceFormFile()
 
 
 	fmt.Println("Welcome to Go Bank!:)")
+
+for {
 	fmt.Println("What do you wannt to do?")
 
 	fmt.Println("1. Check the balance")
@@ -19,40 +43,47 @@ func main() {
 	fmt.Print("Your choice: ")
 	fmt.Scan(&choice)
 
-
-	if choice == 1 {
+	switch choice {
+	case 1: 
 		fmt.Println("Your balance is: ", accountBalance)
-	} else if choice == 2 {
+	case 2:
 		fmt.Println("Your deposit: ")
 		var depositAmount float64
 		fmt.Scan(&depositAmount)
 
 		if depositAmount <= 0 {
 			fmt.Println("Invalid amount. Must be greater than 0.")
-			return 
+			continue
 		}
 
 		accountBalance += depositAmount
 		fmt.Println("Balance updated! New amount:", accountBalance )
-
-	}else if choice == 3{
+		writeBalanceToFile(accountBalance)
+	case 3:
 		fmt.Println("Withdrawal amount: ")
 		var withdrawalAmount float64
 		fmt.Scan(&withdrawalAmount)
 
 		if withdrawalAmount <= 0 {
 			fmt.Println("Invalid amount. Must be greater than 0.")
-			return 
+			continue
 		}
 
 		if withdrawalAmount > accountBalance {
 			fmt.Println("Invalid amount, You can not withdraw more than you have.")
-			return
+			continue
 		}
 
 		accountBalance -= withdrawalAmount
 		fmt.Println("Balance updated! New amount:", accountBalance )
-	} else {
+		writeBalanceToFile(accountBalance)
+	
+	default:
 		fmt.Println("Goodbye")
+		fmt.Println("Thanks for choosing our bank")
+		return
 	}
+
+}
+
 }
