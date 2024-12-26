@@ -43,6 +43,7 @@ func main() {
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("-------------")
+		//panic("Can not continue, sorry!")
 	}
 
 
